@@ -1,95 +1,80 @@
+'use client'
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState } from "react";
+
+interface FoodItem {
+  item: string;
+  desc: string;
+  expDate: Date;
+}
+
+// Sample data for illustration
+const initialFoodItems: Array<FoodItem> = [
+  { item: 'Apple', desc: 'Green Apple', expDate: new Date('2024-03-20') },
+  { item: 'Banana', desc: 'Yellow Banana', expDate: new Date('2024-03-18') },
+  { item: 'Carrot', desc: 'Fresh Carrot', expDate: new Date('2024-03-22') },
+];
+
+const sampleNewItem: FoodItem = {
+  item: 'bread', desc: 'Killer Dave\'s', expDate: new Date('2024-03-21')
+}
 
 export default function Home() {
+
+  // Using useState for dynamic data
+  const [foodItems, setFoodItems] = useState(sortFoodItems(initialFoodItems));
+
+  // Function to delete an item based on index
+  function deleteItem(index: number) {
+    setFoodItems(currentItems => currentItems.filter((_, i) => i !== index));
+  }
+
+  // Function to add an item
+  function addItem(newItem: FoodItem) {
+    setFoodItems(currentItems => {
+      // Create a new array with all current items plus the new item
+      const updatedItems = [...currentItems, newItem];
+      // Return the sorted array of updated items
+      return sortFoodItems(updatedItems);
+    });
+  }
+
+  function sortFoodItems(foodItems: Array<FoodItem>) {
+    // Create a new array from the input and sort it
+    return [...foodItems].sort((a, b) => a.expDate.getTime() - b.expDate.getTime());
+  }
+  
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>
+              <button onClick={() => addItem(sampleNewItem)}>
+                New
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {foodItems.map((foodItem, index) => (
+            <tr key={index}>
+              <td>{foodItem.item}</td>
+              <td>{foodItem.desc}</td>
+              <td>
+                <button onClick={() => deleteItem(index)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+          
+        </tbody>
+      </table>
     </main>
   );
 }
