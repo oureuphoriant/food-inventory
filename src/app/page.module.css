@@ -1,8 +1,19 @@
 .main {
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
+}
+
+.table {
+  width: 100%;
+}
+
+.head {
+  font-size: 30px;
+  font-family: 'Courier New', Courier, monospace;
+  /* padding: 6rem; */
 }
